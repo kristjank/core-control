@@ -1,9 +1,11 @@
-# Core v2 Management Tool - Ark Devnet (git install)
+# Core CLI v2 Management Tool - BCDiploma  (git install)
+
+Tool based on https://github.com/geopsllc/core-control
 
 ## Installation
 
 ```sh
-git clone https://github.com/geopsllc/core-control -b ark-devnet-git
+git clone https://github.com/kristjank/core-control -b bcdiploma-devnet-git
 cd core-control
 ./ccontrol.sh arg1 [arg2]
 ```
