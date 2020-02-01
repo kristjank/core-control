@@ -609,7 +609,7 @@ plugin_manage () {
       sed -i "s/$lastline/$insert$lastline/" $config/plugins.js
 
       git clone $gitrepo/$2 $core/plugins/$2
-      cd $core
+      cd $core/plugins/$2
       yarn build
       lerna bootstrap
 
@@ -627,8 +627,7 @@ plugin_manage () {
 
       sed -i "/$2/,/$blockend/d" $config/plugins.js
       rm -rf $core/plugins/$2
-      yarn build
-      lerna bootstrap
+      rm -rf $core/node_modules/$npmrepo
 
       echo -e "\n${green}Plugin $2 removed successfully.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
@@ -648,7 +647,6 @@ plugin_manage () {
       fi
 
       git pull
-      cd $core
       yarn build
       lerna bootstrap
 
