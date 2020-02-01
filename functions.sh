@@ -270,7 +270,7 @@ secure () {
   if [[ "$ssh_port" != "$ssh_sys_port" && ! -z "$ssh_sys_port" ]]; then
     ssh_port=$ssh_sys_port
   fi
-  
+
   sudo apt install -y ufw fail2ban > /dev/null 2>&1
   sudo ufw allow ${ssh_port}/tcp > /dev/null 2>&1
   sudo ufw allow ${p2p_port}/tcp > /dev/null 2>&1
@@ -326,11 +326,11 @@ update () {
     if [ ! -z "$(cat $config/plugins.js | grep $plugin)" ]; then
 
       . "$basedir/plugins/$plugin"
-      
+
       if [ ! -d $core/node_modules/$npmrepo ]; then
         mkdir $core/node_modules/$npmrepo > /dev/null 2>&1
       fi
-      
+
       if [ ! -d $core/node_modules/$npmrepo/$plugin ]; then
         git clone $gitrepo/$plugin $core/node_modules/$npmrepo/$plugin > /dev/null 2>&1
         cd $core/node_modules/$npmrepo/$plugin > /dev/null 2>&1
@@ -608,10 +608,9 @@ plugin_manage () {
       insert="$insert$stab$blockend\n"
       sed -i "s/$lastline/$insert$lastline/" $config/plugins.js
 
-      mkdir $core/node_modules/$npmrepo > /dev/null 2>&1
-      git clone $gitrepo/$2 $core/node_modules/$npmrepo/$2 > /dev/null 2>&1
-      cd $core/node_modules/$npmrepo/$2
-      yarn install > /dev/null 2>&1
+      git clone $gitrepo/$2 $core/plugins
+      cd $core/plugins/$2
+      yarn setup
 
       echo -e "\n${green}Plugin $2 installed with default settings.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
@@ -626,7 +625,8 @@ plugin_manage () {
     elif [[ "$1" = "remove" && ! -z "$added" ]]; then
 
       sed -i "/$2/,/$blockend/d" $config/plugins.js
-      rm -rf $core/node_modules/$npmrepo/$2 > /dev/null 2>&1
+      rm -rf $core/plugins/$2 > /dev/null 2>&1
+      yarn setup
 
       echo -e "\n${green}Plugin $2 removed successfully.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
