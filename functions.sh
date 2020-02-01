@@ -608,9 +608,9 @@ plugin_manage () {
       insert="$insert$stab$blockend\n"
       sed -i "s/$lastline/$insert$lastline/" $config/plugins.js
 
-      git clone $gitrepo/$2 $core/plugins
-      cd $core/plugins/$2
-      yarn setup
+      git clone $gitrepo/$2 $core/plugins/$2
+      cd $core
+      yarn setup:clean
 
       echo -e "\n${green}Plugin $2 installed with default settings.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
@@ -625,8 +625,8 @@ plugin_manage () {
     elif [[ "$1" = "remove" && ! -z "$added" ]]; then
 
       sed -i "/$2/,/$blockend/d" $config/plugins.js
-      rm -rf $core/plugins/$2 > /dev/null 2>&1
-      yarn setup
+      rm -rf $core/plugins/$2
+      yarn setup:clean
 
       echo -e "\n${green}Plugin $2 removed successfully.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
@@ -637,7 +637,7 @@ plugin_manage () {
 
     elif [[ "$1" = "update" && ! -z "$added" ]]; then
 
-      cd $core/node_modules/$npmrepo/$2 > /dev/null 2>&1
+      cd $core/plugins/$2
       git_check
 
       if [ "$up2date" = "yes" ]; then
@@ -645,8 +645,9 @@ plugin_manage () {
         exit 1
       fi
 
-      git pull > /dev/null 2>&1
-      yarn install > /dev/null 2>&1
+      git pull
+      cd $core
+      yarn setup:clean
 
       echo -e "\n${green}Plugin $2 updated successfully.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
