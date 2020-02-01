@@ -610,7 +610,8 @@ plugin_manage () {
 
       git clone $gitrepo/$2 $core/plugins/$2
       cd $core
-      yarn setup:clean
+      yarn build
+      lerna bootstrap
 
       echo -e "\n${green}Plugin $2 installed with default settings.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
