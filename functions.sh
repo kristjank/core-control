@@ -626,7 +626,8 @@ plugin_manage () {
 
       sed -i "/$2/,/$blockend/d" $config/plugins.js
       rm -rf $core/plugins/$2
-      yarn setup:clean
+      yarn build
+      lerna bootstrap
 
       echo -e "\n${green}Plugin $2 removed successfully.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
@@ -647,7 +648,8 @@ plugin_manage () {
 
       git pull
       cd $core
-      yarn setup:clean
+      yarn build
+      lerna bootstrap
 
       echo -e "\n${green}Plugin $2 updated successfully.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
