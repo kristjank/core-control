@@ -327,14 +327,9 @@ update () {
 
       . "$basedir/plugins/$plugin"
 
-      if [ ! -d $core/node_modules/$npmrepo ]; then
-        mkdir $core/node_modules/$npmrepo > /dev/null 2>&1
-      fi
-
       if [ ! -d $core/node_modules/$npmrepo/$plugin ]; then
-        git clone $gitrepo/$plugin $core/node_modules/$npmrepo/$plugin > /dev/null 2>&1
-        cd $core/node_modules/$npmrepo/$plugin > /dev/null 2>&1
-        yarn install > /dev/null 2>&1
+        cd $core/plugins/$plugin > /dev/null 2>&1
+        lerna bootstrap > /dev/null 2>&1
       fi
 
     fi
@@ -608,10 +603,15 @@ plugin_manage () {
       insert="$insert$stab$blockend\n"
       sed -i "s/$lastline/$insert$lastline/" $config/plugins.js
 
-      git clone $gitrepo/$2 $core/plugins/$2
+      if [ ! -d $core/plugins ]; then
+        mkdir $core/plugins > /dev/null 2>&1
+      fi
+      git clone $gitrepo/$2 $core/plugins/$2 > /dev/null 2>&1
       cd $core/plugins/$2
-      yarn build
-      lerna bootstrap
+      if [ -f tsconfig.json ]; then
+        yarn build > /dev/null 2>&1
+      fi
+      lerna bootstrap > /dev/null 2>&1
 
       echo -e "\n${green}Plugin $2 installed with default settings.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
@@ -626,8 +626,8 @@ plugin_manage () {
     elif [[ "$1" = "remove" && ! -z "$added" ]]; then
 
       sed -i "/$2/,/$blockend/d" $config/plugins.js
-      rm -rf $core/plugins/$2
-      rm -rf $core/node_modules/$npmrepo
+      rm -rf $core/node_modules/$npmrepo/$2 > /dev/null 2>&1
+      rm -rf $core/plugins/$2 > /dev/null 2>&1
 
       echo -e "\n${green}Plugin $2 removed successfully.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
@@ -638,7 +638,7 @@ plugin_manage () {
 
     elif [[ "$1" = "update" && ! -z "$added" ]]; then
 
-      cd $core/plugins/$2
+      cd $core/plugins/$2 > /dev/null 2>&1
       git_check
 
       if [ "$up2date" = "yes" ]; then
@@ -646,9 +646,11 @@ plugin_manage () {
         exit 1
       fi
 
-      git pull
-      yarn build
-      lerna bootstrap
+      git pull > /dev/null 2>&1
+      if [ -f tsconfig.json ]; then
+        yarn build > /dev/null 2>&1
+      fi
+      lerna bootstrap > /dev/null 2>&1
 
       echo -e "\n${green}Plugin $2 updated successfully.${nc}\n"
       echo -e "${red}Restart Core for the changes to take effect.${nc}\n"
