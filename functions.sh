@@ -279,7 +279,7 @@ install_db () {
 
 install_core () {
 
-  git clone $repo $core -b $branch > /dev/null 2>&1
+  git clone -b $branch --recurse-submodules $repo $core
 
   if [ -d $HOME/.config ]; then
     sudo chown -R $USER:$USER $HOME/.config > /dev/null 2>&1
@@ -291,7 +291,7 @@ install_core () {
   cd $core > /dev/null 2>&1
   git submodule update --recursive --remote
 
-  yarn setup:clean > /dev/null 2>&1
+  yarn setup:clean
   cp -rf "$core/packages/core/bin/config/$network" "$data" > /dev/null 2>&1
 
   setefile
