@@ -289,8 +289,9 @@ install_core () {
 
   mkdir $data > /dev/null 2>&1
   cd $core > /dev/null 2>&1
+  git submodule update --recursive --remote
 
-  yarn setup > /dev/null 2>&1
+  yarn setup:clean > /dev/null 2>&1
   cp -rf "$core/packages/core/bin/config/$network" "$data" > /dev/null 2>&1
 
   setefile
@@ -300,7 +301,9 @@ install_core () {
 update () {
 
   sudo n 12 > /dev/null 2>&1
-  yarn setup > /dev/null 2>&1
+  cd $core
+  git submodule update --recursive --remote > /dev/null 2>&1
+  yarn setup:clean > /dev/null 2>&1
 
   local api=$(curl -Is http://127.0.0.1:5001)
   local added="$(cat $config/plugins.js | grep round-monitor)"
