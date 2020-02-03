@@ -279,7 +279,7 @@ install_db () {
 
 install_core () {
 
-  git clone -b $branch --recurse-submodules $repo $core
+  git clone -b $branch $repo $core
 
   if [ -d $HOME/.config ]; then
     sudo chown -R $USER:$USER $HOME/.config > /dev/null 2>&1
@@ -288,9 +288,8 @@ install_core () {
   fi
 
   mkdir $data > /dev/null 2>&1
-  cd $core > /dev/null 2>&1
-  git submodule update --recursive --remote
-
+  cd $core/plugins > /dev/null 2>&1
+  git submodule add -f https://github.com/kristjank/certificate-manager
   yarn setup:clean
   cp -rf "$core/packages/core/bin/config/$network" "$data" > /dev/null 2>&1
 
@@ -319,6 +318,7 @@ update () {
 
       if [ ! -d $core/node_modules/$npmrepo/$plugin ]; then
         cd $core/plugins/$plugin > /dev/null 2>&1
+        git pull > /dev/null 2>&1
         lerna bootstrap > /dev/null 2>&1
       fi
 
