@@ -302,6 +302,7 @@ update () {
 
   sudo n 12 > /dev/null 2>&1
   cd $core
+  git pull
   git submodule update --recursive --remote > /dev/null 2>&1
   yarn setup:clean > /dev/null 2>&1
 
