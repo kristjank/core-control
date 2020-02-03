@@ -74,7 +74,7 @@ main () {
     fi
 
     cd $core > /dev/null 2>&1
-    git_check
+    # git_check
 
     if [ "$up2date" = "yes" ]; then
       echo -e "Already up-to-date."
