@@ -291,7 +291,7 @@ install_core () {
 
   cd $core/plugins > /dev/null 2>&1
   git submodule add -f https://github.com/kristjank/certificate-manager > /dev/null 2>&1
-  
+
   cd $core > /dev/null 2>&1
   yarn setup:clean
   cp -rf "$core/packages/core/bin/config/$network" "$data" > /dev/null 2>&1
@@ -306,7 +306,7 @@ update () {
   cd $core
   git pull
   git submodule update --recursive --remote > /dev/null 2>&1
-  yarn setup:clean > /dev/null 2>&1
+
 
   local api=$(curl -Is http://127.0.0.1:5001)
   local added="$(cat $config/plugins.js | grep round-monitor)"
@@ -322,12 +322,14 @@ update () {
       if [ ! -d $core/node_modules/$npmrepo/$plugin ]; then
         cd $core/plugins/$plugin > /dev/null 2>&1
         git pull > /dev/null 2>&1
-        lerna bootstrap > /dev/null 2>&1
       fi
 
     fi
 
   done
+
+  cd $core > /dev/null 2>&1
+  yarn setup:clean > /dev/null 2>&1
 
   if [[ "$rstatus" = "online" && "$fstatus" = "online" && ! -z "$api" && ! -z "$added" ]]; then
 
