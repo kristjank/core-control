@@ -279,7 +279,7 @@ install_db () {
 
 install_core () {
 
-  git clone -b $branch $repo $core
+  git clone -b $branch $repo $core > /dev/null 2>&1
 
   if [ -d $HOME/.config ]; then
     sudo chown -R $USER:$USER $HOME/.config > /dev/null 2>&1
@@ -288,8 +288,11 @@ install_core () {
   fi
 
   mkdir $data > /dev/null 2>&1
+
   cd $core/plugins > /dev/null 2>&1
-  git submodule add -f https://github.com/kristjank/certificate-manager
+  git submodule add -f https://github.com/kristjank/certificate-manager > /dev/null 2>&1
+  
+  cd $core > /dev/null 2>&1
   yarn setup:clean
   cp -rf "$core/packages/core/bin/config/$network" "$data" > /dev/null 2>&1
 
