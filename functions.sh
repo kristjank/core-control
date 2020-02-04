@@ -251,9 +251,9 @@ status () {
 
 install_deps () {
 
-  sudo add-apt-repository ppa:git-core/ppa -y
-  sudo apt-get update
-  sudo apt-get install git -y
+  sudo add-apt-repository ppa:git-core/ppa -y > /dev/null 2>&1
+  sudo apt-get update > /dev/null 2>&1
+  sudo apt-get install git -y > /dev/null 2>&1
 
   sudo timedatectl set-ntp no > /dev/null 2>&1
   sudo apt install -y htop curl build-essential python nodejs npm libpq-dev ntp gawk jq > /dev/null 2>&1
