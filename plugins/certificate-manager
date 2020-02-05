@@ -1,5 +1,0 @@
-desc='BCDiploma Certificate Manager Custom Transaction'
-npmrepo='@bcdiploma'
-gitrepo='https://github.com/kristjank'
-options[0]='enabled: true'
-
